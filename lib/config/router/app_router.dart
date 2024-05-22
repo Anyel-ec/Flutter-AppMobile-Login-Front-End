@@ -3,14 +3,14 @@ import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/products/products.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/login',
   routes: [
-
     ///* Auth Routes
     GoRoute(
       path: '/login',
       builder: (context, state) => const LoginScreen(),
     ),
+    
     GoRoute(
       path: '/register',
       builder: (context, state) => const RegisterScreen(),
