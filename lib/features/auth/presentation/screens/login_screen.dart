@@ -66,7 +66,7 @@ class _LoginForm extends ConsumerWidget {
           CustomTextFormField(
             label: 'Correo',
             keyboardType: TextInputType.emailAddress,
-            onChanged: ref.read(loginFormProvider.notifier).onEmailChanged,
+            onChanged: ref.read(loginFormProvider.notifier).onEmailChange,
             errorMessage:
                 loginForm.isFormPosted ? loginForm.email.errorMessage : null,
           ),
@@ -86,7 +86,7 @@ class _LoginForm extends ConsumerWidget {
                 text: 'Ingresar',
                 buttonColor: Colors.black,
                 onPressed: () {
-                  ref.read(loginFormProvider.notifier).onFormSubmitted();
+                  ref.read(loginFormProvider.notifier).onFormSubmit();
                 },
               )),
           const Spacer(flex: 2),
