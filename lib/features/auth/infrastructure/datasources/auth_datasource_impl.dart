@@ -35,8 +35,22 @@ class AuthDatasourceImpl implements AuthDataSource {
       return user;
 
 
-    }catch(e){
-      rethrow;
+    }on DioError catch(e){
+      if (e.response?.statusCode == 401){
+        throw WrongCredentials();
+      }
+      if (e.response?.statusCode == 404){
+        throw UserNotFound();
+      }
+      if (e.type == DioErrorType.connectionTimeout){
+        throw ConnectionTimeout();
+      }
+
+
+      throw CustomError(message: 'Something wrong happend', errorCode: 1);
+    }
+    catch(e){
+      throw CustomError(message: 'Something wrong happend', errorCode: 1);
     }
   }
 
@@ -44,7 +58,7 @@ class AuthDatasourceImpl implements AuthDataSource {
   Future<User> register(String email, String password, String fullName) {
     // TODO: implement register
     throw WrongCredentials();
-    
+
   }
   
 

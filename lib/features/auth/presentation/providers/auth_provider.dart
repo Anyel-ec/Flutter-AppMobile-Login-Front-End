@@ -25,6 +25,8 @@ class AuthNotifier extends StateNotifier<AuthState> {
       _setLoggedUser (user);
     } on WrongCredentials {
       logout('Credentials are wrong');
+    } on ConnectionTimeout {
+      logout('Connection timeout');
     }
     catch (e) {
       logout('Erorr not controlled');
@@ -53,9 +55,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     user: null, 
     errorMessage: errorMessage);
 
-    // call repository
-    // await _authRepository.logout();
-    // state = state.copyWith(authStatus: AuthStatus.notAuthenticated, user: null);
+ 
   }
 
   void _setLoggedUser(User user) {
