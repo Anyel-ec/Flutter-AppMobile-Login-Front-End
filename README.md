@@ -2,9 +2,9 @@
 ### API to Login User
 ![Alt text](docs/login_api.PNG) 
 ### Login
-![Alt text](docs/login_api.PNG) 
+![Alt text](docs/login.png) 
 ### Register
-![Alt text](docs/login_api.PNG) 
+![Alt text](docs/register.png) 
 
 # Flutter - Authenticated CRUD App - TesloShop
 
