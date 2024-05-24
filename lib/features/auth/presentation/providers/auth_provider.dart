@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/auth/domain/domain.dart';
 import 'package:teslo_shop/features/auth/domain/entities/user.dart';
+import 'package:teslo_shop/features/auth/infrastructure/infrastructure.dart';
 import 'package:teslo_shop/features/auth/infrastructure/repositories/auth_repository_impl.dart';
 
 // provider initial for AuthNotifier
@@ -18,6 +19,17 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier({ required this.authRepository}): super(AuthState()); // state initial 
 
   void loginUSer (String email, String password) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    try{
+      final user = await authRepository.login(email, password);
+      _setLoggedUser (user);
+    } on WrongCredentials {
+      logout('Credentials are wrong');
+    }
+    catch (e) {
+      logout('Erorr not controlled');
+    }
+
     // call repository
     // final user = await _authRepository.login(email, password);
     // state = state.copyWith(authStatus: AuthStatus.authenticated, user: user);
@@ -32,6 +44,27 @@ class AuthNotifier extends StateNotifier<AuthState> {
     // call repository
     // final user = await _authRepository.checkAuthStatus(token);
     // state = state.copyWith(authStatus: AuthStatus.authenticated, user: user);
+  }
+
+   Future <void> logout([String? errorMessage]) async {
+    // TODO:clean token
+    state = state.copyWith(
+    authStatus: AuthStatus.notAuthenticated, 
+    user: null, 
+    errorMessage: errorMessage);
+
+    // call repository
+    // await _authRepository.logout();
+    // state = state.copyWith(authStatus: AuthStatus.notAuthenticated, user: null);
+  }
+
+  void _setLoggedUser(User user) {
+    // TODO: save the token
+    state = state.copyWith(
+      authStatus: AuthStatus.authenticated, 
+      user: user,
+      errorMessage: '',
+      );
   }
 }
 
@@ -54,4 +87,6 @@ class AuthState {
         user: user ?? this.user,
         errorMessage: errorMessage ?? this.errorMessage);
   }
+
+ 
 }
