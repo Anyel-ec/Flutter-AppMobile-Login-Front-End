@@ -1,4 +1,3 @@
-
 import 'package:teslo_shop/config/config.dart';
 import 'package:teslo_shop/features/auth/domain/datasources/auth_datasource.dart';
 import 'package:teslo_shop/features/auth/domain/entities/user.dart';
@@ -6,34 +5,41 @@ import 'package:dio/dio.dart';
 import 'package:teslo_shop/features/auth/infrastructure/infrastructure.dart';
 
 class AuthDataSourceImpl extends AuthDataSource {
-
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: Environment.apiUrl,
-    )
-  );
+  final dio = Dio(BaseOptions(
+    baseUrl: Environment.apiUrl,
+  ));
 
   @override
-  Future<User> checkAuthStatus(String token) {
-    // TODO: implement checkAuthStatus
-    throw UnimplementedError();
+  Future<User> checkAuthStatus(String token) async {
+    try {
+      final response = await dio.get('/auth/check-status',
+          options: Options(headers: {'Authorization': 'Bearer  $token'}));
+
+      final user = UserMapper.userJsonToEntity(response.data);
+      return user;
+    } on DioException catch (e) {
+      //print(e);
+
+      if (e.response?.statusCode == 401) {
+        throw CustomError('El token no es valido');
+      }
+      
+      throw CustomError('Error desconocido');
+    } catch (e) {
+      throw Exception();
+    }
   }
 
   @override
   Future<User> login(String email, String password) async {
-    
     try {
-      final response = await dio.post('/auth/login', data: {
-        'email': email,
-        'password': password
-      });
+      final response = await dio
+          .post('/auth/login', data: {'email': email, 'password': password});
 
       final user = UserMapper.userJsonToEntity(response.data);
       return user;
-      
     } on DioException catch (e) {
       print(e);
-
 
       if (e.response?.statusCode == 401) {
         throw CustomError('Credenciales incorrectas');
@@ -48,8 +54,6 @@ class AuthDataSourceImpl extends AuthDataSource {
     } catch (e) {
       throw Exception();
     }
-
-
   }
 
   @override
@@ -57,5 +61,4 @@ class AuthDataSourceImpl extends AuthDataSource {
     // TODO: implement register
     throw UnimplementedError();
   }
-  
 }

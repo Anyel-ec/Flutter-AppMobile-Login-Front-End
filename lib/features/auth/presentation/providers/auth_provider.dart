@@ -27,7 +27,9 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier({
     required this.keyValueStorageService,
     required this.authRepository
-  }): super( AuthState() );
+  }): super( AuthState() ){
+    checkAuthStatus(); // here you check if the user is already logged in
+  }
 
   Future<void> loginUser(String email, String password) async {
     try {
@@ -51,6 +53,20 @@ class AuthNotifier extends StateNotifier<AuthState> {
       authStatus: AuthStatus.authenticated,
       errorMessage: '',
     );
+  }
+
+  void checkAuthStatus() async {
+    final token = await keyValueStorageService.getString<String>('token');
+
+    if ( token == null ) return logout(); //! if there is no token, the user is not logged in
+
+    try{
+      final user = await authRepository.checkAuthStatus(token);
+      _setLoggedUser(user);
+
+    }catch(e){
+      logout();
+    }
   }
 
   Future<void> logout([String? errorMessage]) async {
