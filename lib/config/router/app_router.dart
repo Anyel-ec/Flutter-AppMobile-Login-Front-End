@@ -3,8 +3,16 @@ import 'package:teslo_shop/features/auth/auth.dart';
 import 'package:teslo_shop/features/products/products.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/login', // route inicial de la app 
+  initialLocation: '/splash', // route inicial de la app 
   routes: [
+    // First screen
+    GoRoute(
+      path: '/splash',
+      builder: (context, state) => const CheckAuthStatus(),
+    ),
+    
+
+
     ///* Auth Routes
     GoRoute(
       path: '/login',
