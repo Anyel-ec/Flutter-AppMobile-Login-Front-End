@@ -3,7 +3,7 @@ import 'package:teslo_shop/features/auth/domain/entities/user.dart';
 class Product{
    String id;
    String title;
-   int precio;
+   double precio;
     String descripcion;
     String slug;
     List<String> sizes;
