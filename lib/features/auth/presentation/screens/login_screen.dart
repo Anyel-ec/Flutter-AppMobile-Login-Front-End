@@ -89,6 +89,9 @@ class _LoginForm extends ConsumerWidget {
           CustomTextFormField(
             label: 'Contraseña',
             obscureText: true,
+            onFieldSubmitted: (value) {
+              ref.read(loginFormProvider.notifier).onFormSubmit();
+            },
             onChanged: ref.read(loginFormProvider.notifier).onPasswordChanged,
             errorMessage: loginForm.isFormPosted ? loginForm.password.errorMessage : null,
           ),
