@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CheckAuthStatus extends ConsumerWidget {
-  const CheckAuthStatus({super.key});
+class CheckAuthStatusScreen extends StatelessWidget {
+  const CheckAuthStatusScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Container();
+  Widget build(BuildContext context) {
+    
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+    );
   }
 }
