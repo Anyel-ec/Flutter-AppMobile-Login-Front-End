@@ -1,8 +1,23 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/products/domain/entities/Product.dart';
 import 'package:teslo_shop/features/products/domain/repositories/products_repository.dart';
+import 'package:teslo_shop/features/products/presentation/providers/product_repository_provider.dart';
 
 
+final productsProvider = StateNotifierProvider<ProductsNotifier, ProductsState>((ref) {
+  
+  final productsRepository = ref.watch(productsRepositoryProvider); 
+  // if change the productsRepository, the provider will be updated
+
+  return ProductsNotifier(
+    productsRepository: productsRepository
+  );
+
+});
+
+
+
+// determine when to load or next page
 class ProductsNotifier extends StateNotifier<ProductsState>{
   final ProductsRepository productsRepository;
   ProductsNotifier({required this.productsRepository
