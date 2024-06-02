@@ -1,4 +1,50 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:teslo_shop/features/products/domain/entities/Product.dart';
+import 'package:teslo_shop/features/products/domain/repositories/products_repository.dart';
+
+
+class ProductsNotifier extends StateNotifier<ProductsState>{
+  final ProductsRepository productsRepository;
+  ProductsNotifier({required this.productsRepository
+  }) : super(ProductsState()){
+    loadNextPage(); // load first page when the notifier is used or created
+  }
+
+  
+  
+  Future loadNextPage()async{
+
+    //! IS important to check if it is loading or it is the last page
+    if (state.isLoading || state.isLastPage) return; // if it is loading or it is the last page, return (do nothing
+
+    state = state.copyWith(isLoading: true); // set isLoading to true
+
+    final products = await productsRepository.getProductByPage(
+      limit: state.limit,
+      offset: state.offset
+    );
+
+    if (products.length < state.limit){ // yes it is the last page
+      state = state.copyWith(isLastPage: true); // set isLastPage to true
+    }
+
+    if (products.isNotEmpty){
+      state = state.copyWith(
+        isLoading: false,
+        isLastPage: true
+      );
+      return ;
+    }
+    state = state.copyWith(
+      isLoading: false,
+      isLastPage: false,
+      offset: state.offset +10,
+      products: [...state.products, ...products]
+    );
+
+  }
+  
+}
 
 class ProductsState {
   final bool isLastPage;
